@@ -4,6 +4,9 @@ module "opsteam-testecase-01-cloudfront-s3origin" {
     {
       id      = uuid()
       enabled = false
+      default_cache_behavior = {
+        target_origin_id = "bkt_policy"
+      }
       origin = [
         {
           domain_name              = "opsteam-testecase-001-bucketpolicy.s3.amazonaws.com"

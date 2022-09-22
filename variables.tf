@@ -11,9 +11,9 @@ variable "cloudfront_distribution_config" {
           set(
             object(
               {
-                error_caching_min_ttl        = optional(number)
-                error_code                   = optional(number)
-                response_code                = optional(number)
+                error_caching_min_ttl        = optional(string)
+                error_code                   = optional(string)
+                response_code                = optional(string)
                 response_page_path           = optional(string)
               }
             )
@@ -25,9 +25,68 @@ variable "cloudfront_distribution_config" {
             {
               allowed_methods                  = optional(set(string))
               cached_methods                   = optional(set(string))
+              ##cache_policy                     = optional(
+              ##  object(
+              ##    {
+              ##      name        = optional(string)
+              ##      comment     = optional(string)
+              ##      default_ttl = optional(string)
+              ##      max_ttl     = optional(string)
+              ##      min_ttl     = optional(string)
+              ##      parameters_in_cache_key_and_forwarded_to_origin = optional(
+              ##        object(
+              ##          {
+              ##            cookies_config = optional(
+              ##              object(
+              ##                {
+              ##                  cookie_behavior = optional(string)
+              ##                  cookies = optional(
+              ##                    object(
+              ##                      {
+              ##                        items = optional(set(string))
+              ##                      }
+              ##                    )
+              ##                  )
+              ##                }
+              ##              )
+              ##            )
+              ##            headers_config = optional(
+              ##              object(
+              ##                {
+              ##                  header_behavior = optional(string)
+              ##                  headers = optional(
+              ##                    object( 
+              ##                      {
+              ##                        items = optional(set(string))
+              ##                      }
+              ##                    )
+              ##                  )
+              ##                }
+              ##              )
+              ##            )
+              ##            query_strings_config = optional(
+              ##              object(
+              ##                {
+              ##                  query_string_behavior = optional(string)
+              ##                  query_strings = optional(
+              ##                    object(
+              ##                      {
+              ##                        items = optional(set(string))
+              ##                      }
+              ##                    )
+              ##                  )
+              ##                }
+              ##              )
+              ##            )
+              ##          }
+              ##        )
+              ##      )
+              ##    }
+              ##  )
+              ##)
               cache_policy_id                  = optional(string)
               compress                         = optional(bool)
-              default_ttl                      = optional(number)
+              default_ttl                      = optional(string)
               field_level_encryption_id        = optional(string)             
               forwarded_values                 = optional(
                 object(
@@ -67,13 +126,63 @@ variable "cloudfront_distribution_config" {
                   )
                 )
               )
-              max_ttl                        = optional(number)
-              min_ttl                        = optional(number)
-              origin_request_policy_id       = optional(string)           
+              max_ttl                        = optional(string)
+              min_ttl                        = optional(string)
+              origin_request_policy          = optional(
+                object(
+                  {
+                    id             = optional(string)           
+                    name           = optional(string)
+                    comment        = optional(string)
+                    cookies_config = optional(
+                      object(
+                        {
+                          cookie_behavior = optional(string)
+                          cookies = optional(
+                            object(
+                              {
+                                items = optional(set(string))
+                              }
+                            )
+                          )
+                        }
+                      )
+                    )
+                    headers_config = optional(
+                      object(
+                        {
+                          header_behavior = optional(string)
+                          headers = optional(
+                            object( 
+                              {
+                                items = optional(set(string))
+                              }
+                            )
+                          )
+                        }
+                      )
+                    )
+                    query_strings_config = optional(
+                      object(
+                        {
+                          query_string_behavior = optional(string)
+                          query_strings = optional(
+                            object(
+                              {
+                                items = optional(set(string))
+                              }
+                            )
+                          )
+                        }
+                      )
+                    )
+                  }
+                )
+              )
               #realtime_log_config_arn        = optional(string)   
               #response_headers_policy_id     = optional(string)              
               smooth_streaming               = optional(string)
-              target_origin_id               = optional(string)
+              target_origin_id               = string
               #trusted_key_groups             = optional(string)
               #trusted_signers                = optional(string)
               viewer_protocol_policy         = optional(string)
@@ -104,7 +213,7 @@ variable "cloudfront_distribution_config" {
                 cached_methods                   = optional(set(string))
                 cache_policy_id                  = optional(string)
                 compress                         = optional(bool)
-                default_ttl                      = optional(number)
+                default_ttl                      = optional(string)
                 field_level_encryption_id        = optional(string)             
                 forwarded_values                 = optional(
                   object(
@@ -144,14 +253,65 @@ variable "cloudfront_distribution_config" {
                     )
                   )
                 )
-                max_ttl                        = optional(number)
-                min_ttl                        = optional(number)
+                max_ttl                        = optional(string)
+                min_ttl                        = optional(string)
+                origin_request_policy          = optional(
+                  object(
+                    {
+                      id             = optional(string)           
+                      name           = optional(string)
+                      comment        = optional(string)
+                      cookies_config = optional(
+                        object(
+                          {
+                            cookie_behavior = optional(string)
+                            cookies = optional(
+                              object(
+                                {
+                                  items = optional(set(string))
+                                }
+                              )
+                            )
+                          }
+                        )
+                      )
+                      headers_config = optional(
+                        object(
+                          {
+                            header_behavior = optional(string)
+                            headers = optional(
+                              object( 
+                                {
+                                  items = optional(set(string))
+                                }
+                              )
+                            )
+                          }
+                        )
+                      )
+                      query_strings_config = optional(
+                        object(
+                          {
+                            query_string_behavior = optional(string)
+                            query_strings = optional(
+                              object(
+                                {
+                                  items = optional(set(string))
+                                }
+                              )
+                            )
+                          }
+                        )
+                      )
+                    }
+                  )
+                )                
                 origin_request_policy_id       = optional(string)           
                 path_pattern                   = optional(string)
                 #realtime_log_config_arn        = optional(string)   
                 #response_headers_policy_id     = optional(string)              
                 smooth_streaming               = optional(string)
-                target_origin_id               = optional(string)
+                target_origin_id               = string
                 #trusted_key_groups             = optional(string)
                 #trusted_signers                = optional(string)
                 viewer_protocol_policy         = optional(string)
@@ -169,12 +329,12 @@ variable "cloudfront_distribution_config" {
                 custom_origin_config = optional(
                   object(
                     {
-                      http_port                       = optional(number)
-                      https_port                      = optional(number)
+                      http_port                       = optional(string)
+                      https_port                      = optional(string)
                       origin_protocol_policy          = optional(string)
                       origin_ssl_protocols            = optional(set(string))
-                      origin_keepalive_timeout        = optional(number)
-                      origin_read_timeout             = optional(number)
+                      origin_keepalive_timeout        = optional(string)
+                      origin_read_timeout             = optional(string)
                     }
                   )
                 )
