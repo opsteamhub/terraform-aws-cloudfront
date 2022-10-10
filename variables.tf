@@ -6,7 +6,6 @@ variable "cloudfront_distribution_config" {
         id      = string
         aliases = optional(set(string))
         comment = optional(string)
-
         custom_error_response = optional(
           set(
             object(
@@ -19,7 +18,6 @@ variable "cloudfront_distribution_config" {
             )
           )
         )
-
         default_cache_behavior = object(
           {
             allowed_methods = optional(set(string))
@@ -177,8 +175,128 @@ variable "cloudfront_distribution_config" {
                 }
               )
             )
-            #realtime_log_config_arn        = optional(string)   
-            #response_headers_policy_id     = optional(string)              
+            #realtime_log_config_arn        = optional(string)
+            response_headers_policy = optional(
+              object(
+                {
+                  comment = optional(string)
+                  cors_config = optional(
+                    object(
+                      {
+                        access_control_allow_credentials = optional(bool)
+                        access_control_allow_headers     = optional(
+                          object(
+                            {
+                              items = optional(set(string))
+                            }
+                          )
+                        )
+                        access_control_allow_methods     = optional(
+                          object(
+                            {
+                              items = optional(set(string))
+                            }
+                          )
+                        )
+                        access_control_allow_origins     = optional(
+                          object(
+                            {
+                              items = optional(set(string))
+                            }
+                          )
+                        )
+                        access_control_expose_headers    = optional(
+                          object(
+                            {
+                              items = optional(set(string))
+                            }
+                          )
+                        )
+                        access_control_max_age_sec       = optional(string)
+                        origin_override                  = optional(bool)
+                      }
+                    )
+                  )
+                  custom_headers_config = optional(
+                    set(
+                      object(
+                        {
+                          header   = optional(string)
+                          override = optional(bool)
+                          value    = optional(string)
+                        }
+                      )
+                    )
+                  )
+                  id = optional(string)
+                  security_headers_config = optional(
+                    object(
+                      {
+                        content_security_policy = optional(
+                          object(
+                            {
+                              content_security_policy = optional(string)
+                              override                = optional(string)
+                            }
+                          )
+                        )
+                        content_type_options = optional(
+                          object(
+                            {
+                              override = optional(string)
+                            }
+                          )
+                        )
+                        frame_options = optional(
+                          object(
+                            {
+                              frame_option = optional(string)
+                              override     = optional(string)
+                            }
+                          )
+                        )
+                        referrer_policy = optional(
+                          object(
+                            {
+                              referrer_policy = optional(string)
+                              override        = optional(string)
+                            }
+                          )
+                        )
+                        strict_transport_security = optional(
+                          object(
+                            {
+                              access_control_max_age_sec = optional(string)
+                              include_subdomains         = optional(string)
+                              override                   = optional(string)
+                              preload                    = optional(string)
+                            }
+                          )
+                        )
+                        xss_protection = optional(
+                          object(
+                            {
+                              mode_block = optional(string)
+                              override   = optional(string)
+                              protection = optional(bool)
+                              report_uri = optional(string)
+                            }
+                          )
+                        )
+                      }
+                    )
+                  )
+                  server_timing_headers_config = optional(
+                    object(
+                      {
+                        enabled       = optional(string)
+                        sampling_rate = optional(string)
+                      }
+                    )
+                  )
+                }
+              )
+            )
             smooth_streaming = optional(string)
             target_origin_id = string
             #trusted_key_groups             = optional(string)
@@ -362,10 +480,129 @@ variable "cloudfront_distribution_config" {
                     }
                   )
                 )
-                origin_request_policy_id = optional(string)
                 path_pattern             = optional(string)
                 #realtime_log_config_arn        = optional(string)   
-                #response_headers_policy_id     = optional(string)              
+                response_headers_policy = optional(
+                  object(
+                    {
+                      comment = optional(string)
+                      cors_config = optional(
+                        object(
+                          {
+                            access_control_allow_credentials = optional(bool)
+                            access_control_allow_headers     = optional(
+                              object(
+                                {
+                                  items = optional(set(string))
+                                }
+                              )
+                            )
+                            access_control_allow_methods     = optional(
+                              object(
+                                {
+                                  items = optional(set(string))
+                                }
+                              )
+                            )
+                            access_control_allow_origins     = optional(
+                              object(
+                                {
+                                  items = optional(set(string))
+                                }
+                              )
+                            )
+                            access_control_expose_headers    = optional(
+                              object(
+                                {
+                                  items = optional(set(string))
+                                }
+                              )
+                            )
+                            access_control_max_age_sec       = optional(string)
+                            origin_override                  = optional(bool)
+                          }
+                        )
+                      )
+                      custom_headers_config = optional(
+                        set(
+                          object(
+                            {
+                              header   = optional(string)
+                              override = optional(bool)
+                              value    = optional(string)
+                            }
+                          )
+                        )
+                      )
+                      id = optional(string)
+                      security_headers_config = optional(
+                        object(
+                          {
+                            content_security_policy = optional(
+                              object(
+                                {
+                                  content_security_policy = optional(string)
+                                  override                = optional(string)
+                                }
+                              )
+                            )
+                            content_type_options = optional(
+                              object(
+                                {
+                                  override = optional(string)
+                                }
+                              )
+                            )
+                            frame_options = optional(
+                              object(
+                                {
+                                  frame_option = optional(string)
+                                  override     = optional(string)
+                                }
+                              )
+                            )
+                            referrer_policy = optional(
+                              object(
+                                {
+                                  referrer_policy = optional(string)
+                                  override        = optional(string)
+                                }
+                              )
+                            )
+                            strict_transport_security = optional(
+                              object(
+                                {
+                                  access_control_max_age_sec = optional(string)
+                                  include_subdomains         = optional(string)
+                                  override                   = optional(string)
+                                  preload                    = optional(string)
+                                }
+                              )
+                            )
+                            xss_protection = optional(
+                              object(
+                                {
+                                  mode_block = optional(string)
+                                  override   = optional(string)
+                                  protection = optional(bool)
+                                  report_uri = optional(string)
+                                }
+                              )
+                            )
+                          }
+                        )
+                      )
+                      server_timing_headers_config = optional(
+                        object(
+                          {
+                            enabled       = optional(string)
+                            sampling_rate = optional(string)
+                          }
+                        )
+                      )
+                    }
+                  )
+                )              
                 smooth_streaming = optional(string)
                 target_origin_id = string
                 #trusted_key_groups             = optional(string)

@@ -40,7 +40,7 @@ locals {
       }
       max_ttl = 31536000
       min_ttl = 0
-
+      
       origin_request_policy = {
         cookies_config = {
           cookie_behavior = "all"
@@ -52,7 +52,20 @@ locals {
           query_string_behavior = "all"
         }
       }
-
+      response_headers_policy = {
+        cors_config = {
+          access_control_allow_credentials = true
+          access_control_allow_methods = {
+            items = ["GET"]
+          }
+          access_control_max_age_sec    = "3600"
+          origin_override               = true
+        }
+        server_timing_headers_config = {
+          enabled       = true
+          sampling_rate = 100
+        }
+      }
       smooth_streaming       = false
       viewer_protocol_policy = "redirect-to-https"
     }
@@ -107,7 +120,20 @@ locals {
           query_string_behavior = "all"
         }
       }
-
+      response_headers_policy = {
+        cors_config = {
+          access_control_allow_credentials = true
+          access_control_allow_methods = {
+            items = ["GET"]
+          }
+          access_control_max_age_sec    = "3600"
+          origin_override               = true
+        }
+        server_timing_headers_config = {
+          enabled       = true
+          sampling_rate = 100
+        }
+      }
       smooth_streaming       = false
       viewer_protocol_policy = "redirect-to-https"
     }
@@ -290,17 +316,17 @@ locals {
 
         origin_request_policy = {
           id = try(
-                    aws_cloudfront_origin_request_policy.default_behavior_origin_request_policy[
-                      sha1(
-                        format(
-                          "%s-default-%s",
-                          x["id"],
-                          x["default_cache_behavior"]["target_origin_id"]
-                        )
-                      )
-                    ].id,
-                    x["default_cache_behavior"]["origin_request_policy"]["id"]
-                  )
+            aws_cloudfront_origin_request_policy.default_behavior_origin_request_policy[
+              sha1(
+                format(
+                  "%s-default-%s",
+                  x["id"],
+                  x["default_cache_behavior"]["target_origin_id"]
+                )
+              )
+            ].id,
+            x["default_cache_behavior"]["origin_request_policy"]["id"]
+          )
 
           comment = x["default_cache_behavior"]["origin_request_policy"]["comment"]
           cookies_config = {
@@ -324,7 +350,162 @@ locals {
         }
 
         #realtime_log_config_arn        =    
-        #response_headers_policy_id     =               
+        response_headers_policy = {
+          comment = try(
+            x["default_cache_behavior"]["response_headers_policy"]["comment"],
+            null
+          )
+          cors_config = {
+            access_control_allow_credentials = try(
+              x["default_cache_behavior"]["response_headers_policy"]["cors_config"]["access_control_allow_credentials"],
+              null
+            )
+            access_control_allow_headers = {
+              items = try(
+                x["default_cache_behavior"]["response_headers_policy"]["cors_config"]["access_control_allow_headers"]["items"],
+                null
+              )
+            }
+            access_control_allow_methods = {
+              items = try(
+                x["default_cache_behavior"]["response_headers_policy"]["cors_config"]["access_control_allow_methods"]["items"],
+                null
+              )
+            }
+            access_control_allow_origins = {
+              items = try(
+                x["default_cache_behavior"]["response_headers_policy"]["cors_config"]["access_control_allow_origins"]["items"],
+                null
+              )
+            }
+            access_control_expose_headers = {
+              items = try(
+                x["default_cache_behavior"]["response_headers_policy"]["cors_config"]["access_control_expose_headers"]["items"],
+                null
+              )
+            }
+            access_control_max_age_sec = try(
+              x["default_cache_behavior"]["response_headers_policy"]["cors_config"]["access_control_max_age_sec"],
+              null
+            )
+            origin_override = try(
+              x["default_cache_behavior"]["response_headers_policy"]["cors_config"]["origin_override"],
+              null
+            )
+          }
+          custom_headers_config = [ for z in coalesce(try(x["default_cache_behavior"]["response_headers_policy"]["custom_headers_config"], null), []):
+            {
+              header = try(
+                z["header"],
+                null
+              )
+              override = try(
+                z["override"],
+                null
+              )
+              value = try(
+                z["value"],
+                null
+              )
+            }
+          ]
+          id = try(
+            aws_cloudfront_response_headers_policy.default_behavior_response_headers_policy[
+              sha1(
+                format(
+                  "%s-default-%s",
+                  x["id"],
+                  x["default_cache_behavior"]["target_origin_id"]
+                )
+              )
+            ].id,
+            x["default_cache_behavior"]["response_headers_policy"]["id"]
+          )
+          security_headers_config = {
+            content_security_policy = {
+              content_security_policy = try(
+                x["default_cache_behavior"]["response_headers_policy"]["security_headers_config"]["content_security_policy"]["content_security_policy"],
+                null
+              ) 
+              override = try(
+                x["default_cache_behavior"]["response_headers_policy"]["security_headers_config"]["content_security_policy"]["override"],
+                null
+              )
+            }
+            content_type_options = {
+              override = try(
+                x["default_cache_behavior"]["response_headers_policy"]["content_type_options"]["override"],
+                null
+              )
+            }
+            frame_options = {
+              frame_option = try(
+                x["default_cache_behavior"]["response_headers_policy"]["frame_options"]["frame_options"],
+                null
+              )
+              override = try(
+                x["default_cache_behavior"]["response_headers_policy"]["frame_options"]["override"],
+                null
+              )
+            }
+            referrer_policy = {
+              referrer_policy = try(
+                x["default_cache_behavior"]["response_headers_policy"]["referrer_policy"]["referrer_policy"],
+                null
+              )
+              override        = try(
+                x["default_cache_behavior"]["response_headers_policy"]["referrer_policy"]["override"],
+                null
+              )
+            }
+            strict_transport_security = {
+              access_control_max_age_sec = try(
+                x["default_cache_behavior"]["response_headers_policy"]["strict_transport_security"]["access_control_max_age_sec"],
+                null
+              )
+              include_subdomains         = try(
+                x["default_cache_behavior"]["response_headers_policy"]["strict_transport_security"]["include_subdomains"],
+                null
+              )
+              override                   = try(
+                x["default_cache_behavior"]["response_headers_policy"]["strict_transport_security"]["override"],
+                null
+              )
+              preload                    = try(
+                x["default_cache_behavior"]["response_headers_policy"]["strict_transport_security"]["preload"],
+                null
+              )
+            }
+            xss_protection = {
+              mode_block = try(
+                x["default_cache_behavior"]["response_headers_policy"]["xss_protection"]["mode_block"],
+                null
+              )
+              override   = try(
+                x["default_cache_behavior"]["response_headers_policy"]["xss_protection"]["override"],
+                null
+              )
+              protection = try(
+                x["default_cache_behavior"]["response_headers_policy"]["xss_protection"]["protection"],
+                null
+              )
+              report_uri = try(
+                x["default_cache_behavior"]["response_headers_policy"]["xss_protection"]["report_uri"],
+                null
+              )
+            }
+          }
+          server_timing_headers_config = {
+            enabled = try(
+              x["default_cache_behavior"]["response_headers_policy"]["server_timing_headers_config"]["enabled"],
+              null
+            )
+            sampling_rate = try(
+              x["default_cache_behavior"]["response_headers_policy"]["server_timing_headers_config"]["sampling_rate"],
+              null
+            )
+          }
+        }
         smooth_streaming = coalesce(x["default_cache_behavior"]["smooth_streaming"], local.default_cloudfront_distribution_config["default_cache_behavior"]["smooth_streaming"])
         target_origin_id = x["default_cache_behavior"]["target_origin_id"]
         #trusted_key_groups             = 
@@ -401,8 +582,22 @@ locals {
             }
           }
           
-          compress                  = coalesce(z["compress"], local.default_cloudfront_distribution_config["ordered_cache_behavior"]["compress"])
-          default_ttl               = z["cache_policy"]["id"] == null ? coalesce(z["default_ttl"], local.default_cloudfront_distribution_config["ordered_cache_behavior"]["default_ttl"]) : null
+          compress = coalesce(z["compress"], local.default_cloudfront_distribution_config["ordered_cache_behavior"]["compress"])
+
+          default_ttl = try(
+                              aws_cloudfront_cache_policy.ordered_behavior_cache_policy[
+                                sha1(
+                                  format(
+                                    "%s-%s-%s", x["id"], z["path_pattern"], z["target_origin_id"]
+                                  )
+                                )
+                              ].id,
+                              z["cache_policy"]["id"]
+                            ) == null ? coalesce(
+                              z["default_ttl"],
+                              local.default_cloudfront_distribution_config["ordered_cache_behavior"]["default_ttl"]
+                            ) : null
+
           field_level_encryption_id = z["field_level_encryption_id"]
           
           forwarded_values = z["cache_policy"]["id"] == null ? {
@@ -427,8 +622,33 @@ locals {
             }
           ]
           
-          max_ttl = z["cache_policy"]["id"] == null ? coalesce(z["max_ttl"], local.default_cloudfront_distribution_config["ordered_cache_behavior"]["max_ttl"]) : null
-          min_ttl = z["cache_policy"]["id"] == null ? coalesce(z["min_ttl"], local.default_cloudfront_distribution_config["ordered_cache_behavior"]["min_ttl"]) : null
+          max_ttl = try(
+                              aws_cloudfront_cache_policy.ordered_behavior_cache_policy[
+                                sha1(
+                                  format(
+                                    "%s-%s-%s", x["id"], z["path_pattern"], z["target_origin_id"]
+                                  )
+                                )
+                              ].id,
+                              z["cache_policy"]["id"]
+                            ) == null ? coalesce(
+                              z["max_ttl"],
+                              local.default_cloudfront_distribution_config["ordered_cache_behavior"]["max_ttl"]
+                            ) : null
+          
+          min_ttl = try(
+                              aws_cloudfront_cache_policy.ordered_behavior_cache_policy[
+                                sha1(
+                                  format(
+                                    "%s-%s-%s", x["id"], z["path_pattern"], z["target_origin_id"]
+                                  )
+                                )
+                              ].id,
+                              z["cache_policy"]["id"]
+                            ) == null ? coalesce(
+                              z["min_ttl"],
+                              local.default_cloudfront_distribution_config["ordered_cache_behavior"]["min_ttl"]
+                            ) : null
 
           origin_request_policy = {
             id = try(
@@ -446,32 +666,32 @@ locals {
                     )
 
             comment = try(
-                          z["origin_request_policy"]["comment"],
-                          null
-                        )
+              z["origin_request_policy"]["comment"],
+              null
+            )
 
             cookies_config = {
               cookie_behavior = try(
-                                      z["origin_request_policy"]["cookies_config"]["cookie_behavior"],
-                                      null
-                                    )
+                z["origin_request_policy"]["cookies_config"]["cookie_behavior"],
+                null
+              )
               cookies = {
                 items = try(
-                              z["origin_request_policy"]["cookies_config"]["cookies"]["items"],
-                              null
-                            )
+                  z["origin_request_policy"]["cookies_config"]["cookies"]["items"],
+                  null
+                )
               }
             }
             headers_config = {
               header_behavior = try(
-                                      z["origin_request_policy"]["cookies_config"]["cookie_behavior"],
-                                      null
-                                    )
+                  z["origin_request_policy"]["cookies_config"]["cookie_behavior"],
+                  null
+                )
               headers = {
                 items = try(
-                              z["origin_request_policy"]["headers_config"]["headers"]["items"],
-                              null
-                            )
+                  z["origin_request_policy"]["headers_config"]["headers"]["items"],
+                  null
+                )
               }
             }
             query_strings_config = {
@@ -481,10 +701,165 @@ locals {
               }
             }
           }
-
           path_pattern = z["path_pattern"]
           #realtime_log_config_arn        =    
-          #response_headers_policy_id     =               
+          response_headers_policy = {
+            comment = try(
+              z["response_headers_policy"]["comment"],
+              null
+            )
+            cors_config = {
+              access_control_allow_credentials = try(
+                z["response_headers_policy"]["cors_config"]["access_control_allow_credentials"],
+                null
+              )
+              access_control_allow_headers = {
+                items = try(
+                  z["response_headers_policy"]["cors_config"]["access_control_allow_headers"]["items"],
+                  null
+                )
+              }
+              access_control_allow_methods = {
+                items = try(
+                  z["response_headers_policy"]["cors_config"]["access_control_allow_methods"]["items"],
+                  null
+                )
+              }
+              access_control_allow_origins = {
+                items = try(
+                  z["response_headers_policy"]["cors_config"]["access_control_allow_origins"]["items"],
+                  null
+                )
+              }
+              access_control_expose_headers = {
+                items = try(
+                  z["response_headers_policy"]["cors_config"]["access_control_expose_headers"]["items"],
+                  null
+                )
+              }
+              access_control_max_age_sec = try(
+                z["response_headers_policy"]["cors_config"]["access_control_max_age_sec"],
+                null
+              )
+              origin_override = try(
+                z["response_headers_policy"]["cors_config"]["origin_override"],
+                null
+              )
+            }
+            custom_headers_config = [ for z in coalesce(try(z["response_headers_policy"]["custom_headers_config"], null), []):
+              {
+                header = try(
+                  z["header"],
+                  null
+                )
+                override = try(
+                  z["override"],
+                  null
+                )
+                value = try(
+                  z["value"],
+                  null
+                )
+              }
+            ]
+            id = try(
+              aws_cloudfront_response_headers_policy.ordered_behavior_response_headers_policy[
+                sha1(
+                  format(
+                    "%s-%s-%s",
+                    x["id"],
+                    z["path_pattern"],
+                    z["target_origin_id"]
+                  )
+                )
+              ].id,
+              z["response_headers_policy"]["id"]
+            )
+            security_headers_config = {
+              content_security_policy = {
+                content_security_policy = try(
+                  z["response_headers_policy"]["security_headers_config"]["content_security_policy"]["content_security_policy"],
+                  null
+                ) 
+                override = try(
+                  z["response_headers_policy"]["security_headers_config"]["content_security_policy"]["override"],
+                  null
+                )
+              }
+              content_type_options = {
+                override = try(
+                  z["response_headers_policy"]["content_type_options"]["override"],
+                  null
+                )
+              }
+              frame_options = {
+                frame_option = try(
+                  z["response_headers_policy"]["frame_options"]["frame_options"],
+                  null
+                )
+                override = try(
+                  z["response_headers_policy"]["frame_options"]["override"],
+                  null
+                )
+              }
+              referrer_policy = {
+                referrer_policy = try(
+                  z["response_headers_policy"]["referrer_policy"]["referrer_policy"],
+                  null
+                )
+                override        = try(
+                  z["response_headers_policy"]["referrer_policy"]["override"],
+                  null
+                )
+              }
+              strict_transport_security = {
+                access_control_max_age_sec = try(
+                  z["response_headers_policy"]["strict_transport_security"]["access_control_max_age_sec"],
+                  null
+                )
+                include_subdomains         = try(
+                  z["response_headers_policy"]["strict_transport_security"]["include_subdomains"],
+                  null
+                )
+                override                   = try(
+                  z["response_headers_policy"]["strict_transport_security"]["override"],
+                  null
+                )
+                preload                    = try(
+                  z["response_headers_policy"]["strict_transport_security"]["preload"],
+                  null
+                )
+              }
+              xss_protection = {
+                mode_block = try(
+                  z["response_headers_policy"]["xss_protection"]["mode_block"],
+                  null
+                )
+                override   = try(
+                  z["response_headers_policy"]["xss_protection"]["override"],
+                  null
+                )
+                protection = try(
+                  z["response_headers_policy"]["xss_protection"]["protection"],
+                  null
+                )
+                report_uri = try(
+                  z["response_headers_policy"]["xss_protection"]["report_uri"],
+                  null
+                )
+              }
+            }
+            server_timing_headers_config = {
+              enabled = try(
+                z["response_headers_policy"]["server_timing_headers_config"]["enabled"],
+                null
+              )
+              sampling_rate = try(
+                z["response_headers_policy"]["server_timing_headers_config"]["sampling_rate"],
+                null
+              )
+            }
+          }          
           smooth_streaming = coalesce(z["smooth_streaming"], local.default_cloudfront_distribution_config["ordered_cache_behavior"]["smooth_streaming"])
           target_origin_id = z["target_origin_id"]
           #trusted_key_groups             = 
@@ -558,8 +933,6 @@ locals {
   ]
 
 }
-
-
 
 output "teste" {
   value = local.cloudfront_distribution_config
