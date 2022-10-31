@@ -19,9 +19,9 @@ resource "aws_cloudfront_cache_policy" "default_behavior_cache_policy" {
                 z["cache_policy"]["parameters_in_cache_key_and_forwarded_to_origin"]["cookies_config"]["cookie_behavior"],
                 z["cache_policy"]["parameters_in_cache_key_and_forwarded_to_origin"]["headers_config"]["header_behavior"],
                 z["cache_policy"]["parameters_in_cache_key_and_forwarded_to_origin"]["query_strings_config"]["query_string_behavior"]
-                ]
-              )
-            ) > 0
+              ]
+            )
+          ) > 0
         ]
       ]
     )[*]["cache_policy_id"],
@@ -90,13 +90,13 @@ resource "aws_cloudfront_cache_policy" "default_behavior_cache_policy" {
 
 
 
-  #
-  # Generate Map using hash sha1 from a string generated from the the 
-  # Terraform CloudFront ID, Path Pattern and the Target Origin ID. 
-  # There is one if condition checking whether there is at least one 
-  # of the mandatoryattributes to the cache policy to define.
-  #
-  #
+#
+# Generate Map using hash sha1 from a string generated from the the 
+# Terraform CloudFront ID, Path Pattern and the Target Origin ID. 
+# There is one if condition checking whether there is at least one 
+# of the mandatoryattributes to the cache policy to define.
+#
+#
 resource "aws_cloudfront_cache_policy" "ordered_behavior_cache_policy" {
   for_each = zipmap(
     flatten(
@@ -109,9 +109,9 @@ resource "aws_cloudfront_cache_policy" "ordered_behavior_cache_policy" {
                 z["cache_policy"]["parameters_in_cache_key_and_forwarded_to_origin"]["cookies_config"]["cookie_behavior"],
                 z["cache_policy"]["parameters_in_cache_key_and_forwarded_to_origin"]["headers_config"]["header_behavior"],
                 z["cache_policy"]["parameters_in_cache_key_and_forwarded_to_origin"]["query_strings_config"]["query_string_behavior"]
-                ]
-              )
-            ) > 0
+              ]
+            )
+          ) > 0
         ]
       ]
     )[*]["cache_policy_id"],
@@ -125,9 +125,9 @@ resource "aws_cloudfront_cache_policy" "ordered_behavior_cache_policy" {
                 z["cache_policy"]["parameters_in_cache_key_and_forwarded_to_origin"]["cookies_config"]["cookie_behavior"],
                 z["cache_policy"]["parameters_in_cache_key_and_forwarded_to_origin"]["headers_config"]["header_behavior"],
                 z["cache_policy"]["parameters_in_cache_key_and_forwarded_to_origin"]["query_strings_config"]["query_string_behavior"]
-                ]
-              )
-            ) > 0
+              ]
+            )
+          ) > 0
         ]
       ]
     )

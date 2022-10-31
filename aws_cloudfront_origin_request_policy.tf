@@ -90,7 +90,7 @@ resource "aws_cloudfront_origin_request_policy" "default_behavior_origin_request
 
 
 resource "aws_cloudfront_origin_request_policy" "ordered_behavior_origin_request_policy" {
-  
+
   #
   # Generate Map using hash sha1 from a string generated from the the 
   # Terraform CloudFront ID, Path Pattern and the Target Origin ID. 

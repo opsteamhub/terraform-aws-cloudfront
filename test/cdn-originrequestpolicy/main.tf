@@ -1,5 +1,5 @@
 module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
-  source = "/Users/brunopaiuca/projects/opsteam/terraform-modules/terraform-aws-cloudfront"
+  source = "../.././"
   cloudfront_distribution_config = [
     {
       #
@@ -14,7 +14,7 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
       ordered_cache_behavior = [
         {
           cache_policy = {
-            id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+            id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
           }
           path_pattern     = "/teste"
           target_origin_id = "a934thertret"
@@ -25,21 +25,21 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
       ]
       origin = [
         {
-          domain_name              = "google.com"
-          origin_id                = "a934thertret"
+          domain_name = "google.com"
+          origin_id   = "a934thertret"
         },
       ]
     },
     #######################################################################################
     {
-      id = "dmfds9me-cdn-regular-origin-custom-origin-req-policy-whitelist"
+      id      = "dmfds9me-cdn-regular-origin-custom-origin-req-policy-whitelist"
       enabled = false
       default_cache_behavior = {
         cache_policy = {
-          id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+          id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
         }
         target_origin_id = "4rms9n23n09nc6"
-        origin_request_policy = {      
+        origin_request_policy = {
           name    = "cookiestest_whitelist"
           comment = "cookies test"
           cookies_config = {
@@ -52,8 +52,8 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
       }
       origin = [
         {
-          domain_name              = "google.com"
-          origin_id                = "4rms9n23n09nc6"
+          domain_name = "google.com"
+          origin_id   = "4rms9n23n09nc6"
         },
       ]
     },
@@ -66,11 +66,11 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
       ordered_cache_behavior = [
         {
           cache_policy = {
-            id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+            id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
           }
           path_pattern     = "/cookiestest_whitelist"
           target_origin_id = "4rms9n23n09nc6"
-          origin_request_policy = {      
+          origin_request_policy = {
             name    = "cookiestest_whitelist"
             comment = "cookies test"
             cookies_config = {
@@ -83,11 +83,11 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
         },
         {
           cache_policy = {
-            id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+            id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
           }
           path_pattern     = "/cookiestest_all"
           target_origin_id = "4rms9n23n09nc6"
-          origin_request_policy = {      
+          origin_request_policy = {
             cookies_config = {
               cookie_behavior = "all"
             }
@@ -95,11 +95,11 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
         },
         {
           cache_policy = {
-            id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+            id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
           }
           path_pattern     = "/cookiestest_none"
           target_origin_id = "4rms9n23n09nc6"
-          origin_request_policy = {      
+          origin_request_policy = {
             name    = "cookiestest_none"
             comment = "cookies test"
             cookies_config = {
@@ -109,22 +109,22 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
         },
         {
           cache_policy = {
-            id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+            id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
           }
           path_pattern     = "/cookietest_default"
           target_origin_id = "4rms9n23n09nc6"
-          origin_request_policy = {      
+          origin_request_policy = {
             name    = "cookiestest_default"
             comment = "cookies test"
           }
         },
         {
           cache_policy = {
-            id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+            id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
           }
           path_pattern     = "/headerstest_whitelist"
           target_origin_id = "4rms9n23n09nc6"
-          origin_request_policy = {      
+          origin_request_policy = {
             name    = "headerstest_whitelist"
             comment = "headers test"
             headers_config = {
@@ -137,11 +137,11 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
         },
         {
           cache_policy = {
-            id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+            id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
           }
           path_pattern     = "/headerstest_none"
           target_origin_id = "4rms9n23n09nc6"
-          origin_request_policy = {      
+          origin_request_policy = {
             name    = "headerstest_none"
             comment = "headers test"
             headers_config = {
@@ -151,11 +151,11 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
         },
         {
           cache_policy = {
-            id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
-          }        
+            id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+          }
           path_pattern     = "/headertest_allviewer"
           target_origin_id = "4rms9n23n09nc6"
-          origin_request_policy = {      
+          origin_request_policy = {
             name    = "headerstest_allviewer"
             comment = "headers test"
             headers_config = {
@@ -165,11 +165,11 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
         },
         {
           cache_policy = {
-            id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+            id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
           }
           path_pattern     = "/headertest_allviewer_and_whitelist_cfront"
           target_origin_id = "4rms9n23n09nc6"
-          origin_request_policy = {      
+          origin_request_policy = {
             name    = "headertest_allviewer_and_whitelist_cfront"
             comment = "headers test"
             headers_config = {
@@ -182,7 +182,7 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
         },
         {
           cache_policy = {
-            id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+            id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
           }
           path_pattern     = "/query_strings_default"
           target_origin_id = "4rms9n23n09nc6"
@@ -193,7 +193,7 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
         },
         {
           cache_policy = {
-            id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+            id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
           }
           path_pattern     = "/query_strings_none"
           target_origin_id = "4rms9n23n09nc6"
@@ -207,7 +207,7 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
         },
         {
           cache_policy = {
-            id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+            id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
           }
           path_pattern     = "/query_strings_all"
           target_origin_id = "4rms9n23n09nc6"
@@ -221,7 +221,7 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
         },
         {
           cache_policy = {
-            id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+            id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
           }
           path_pattern     = "/query_strings_whitelist"
           target_origin_id = "4rms9n23n09nc6"
@@ -239,8 +239,8 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
       ]
       origin = [
         {
-          domain_name              = "google.com"
-          origin_id                = "4rms9n23n09nc6"
+          domain_name = "google.com"
+          origin_id   = "4rms9n23n09nc6"
         },
       ]
     },
@@ -253,12 +253,12 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
       ordered_cache_behavior = [
         {
           cache_policy = {
-            name  = "custom_cachepolicy_querystring_whitelist"
+            name = "custom_cachepolicy_querystring_whitelist"
             parameters_in_cache_key_and_forwarded_to_origin = {
-              query_strings_config= {
+              query_strings_config = {
                 query_string_behavior = "whitelist"
                 query_strings = {
-                  items = ["example"] 
+                  items = ["example"]
                 }
               }
             }
@@ -272,8 +272,8 @@ module "opsteam-testecase-01-cloudfront-originreqpolicy-cachepolicy" {
       ]
       origin = [
         {
-          domain_name              = "google.com"
-          origin_id                = "7bfsd8nir2"
+          domain_name = "google.com"
+          origin_id   = "7bfsd8nir2"
         },
       ]
     },

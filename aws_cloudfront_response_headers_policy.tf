@@ -10,7 +10,7 @@ resource "aws_cloudfront_response_headers_policy" "default_behavior_response_hea
   for_each = zipmap(
     flatten(
       [
-        for x in local.cloudfront_distribution_config_normalized:
+        for x in local.cloudfront_distribution_config_normalized :
         [for z in [x["default_cache_behavior"]] :
           merge(z, { "response_headers_policy_id" : sha1(format("%s-default-%s", x["id"], z["target_origin_id"])) }) if length(
             concat(
@@ -34,28 +34,28 @@ resource "aws_cloudfront_response_headers_policy" "default_behavior_response_hea
                     coalesce(z["response_headers_policy"]["security_headers_config"]["content_type_options"]["override"], []),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["frame_options"]["frame_option"], []),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["referrer_policy"]["referrer_policy"], []),
-                    coalesce(z["response_headers_policy"]["security_headers_config"]["strict_transport_security"]["access_control_max_age_sec"], [],),
+                    coalesce(z["response_headers_policy"]["security_headers_config"]["strict_transport_security"]["access_control_max_age_sec"], [], ),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["strict_transport_security"]["override"], []),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["xss_protection"]["mode_block"], []),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["xss_protection"]["override"], []),
-                    coalesce(z["response_headers_policy"]["security_headers_config"]["xss_protection"]["protection"], []),                  
+                    coalesce(z["response_headers_policy"]["security_headers_config"]["xss_protection"]["protection"], []),
                   ]
                 )
-              ),              
+              ),
               compact(
                 [
                   z["response_headers_policy"]["server_timing_headers_config"]["enabled"],
                   z["response_headers_policy"]["server_timing_headers_config"]["sampling_rate"],
                 ]
               )
-            ),   
+            ),
           ) > 0
         ]
       ]
     )[*]["response_headers_policy_id"],
     flatten(
       [
-        for x in local.cloudfront_distribution_config_normalized:
+        for x in local.cloudfront_distribution_config_normalized :
         [for z in [x["default_cache_behavior"]] :
           z["response_headers_policy"] if length(
             concat(
@@ -87,14 +87,14 @@ resource "aws_cloudfront_response_headers_policy" "default_behavior_response_hea
                   ]
                 )
 
-              ),     
+              ),
               compact(
                 [
                   z["response_headers_policy"]["server_timing_headers_config"]["enabled"],
                   z["response_headers_policy"]["server_timing_headers_config"]["sampling_rate"],
                 ]
               )
-            )  
+            )
           ) > 0
         ]
       ]
@@ -104,7 +104,7 @@ resource "aws_cloudfront_response_headers_policy" "default_behavior_response_hea
   name    = each.key
   comment = each.value["comment"]
 
-  dynamic cors_config {
+  dynamic "cors_config" {
     for_each = length(
       concat(
         compact(
@@ -115,11 +115,11 @@ resource "aws_cloudfront_response_headers_policy" "default_behavior_response_hea
         ),
         compact(
           coalesce(each.value["cors_config"]["access_control_allow_origins"]["items"], [])
-        ),        
+        ),
       )
-    ) > 0 ? tomap({"cors_config" = each.value["cors_config"]}) : {}
+    ) > 0 ? tomap({ "cors_config" = each.value["cors_config"] }) : {}
     content {
-      
+
       access_control_allow_credentials = coalesce(
         cors_config.value["access_control_allow_credentials"],
         local.default_cloudfront_distribution_config["default_cache_behavior"]["response_headers_policy"]["cors_config"]["access_control_allow_credentials"]
@@ -140,7 +140,7 @@ resource "aws_cloudfront_response_headers_policy" "default_behavior_response_hea
         items = cors_config.value["access_control_allow_origins"]["items"]
       }
 
-      dynamic access_control_expose_headers {
+      dynamic "access_control_expose_headers" {
         for_each = cors_config.value["access_control_expose_headers"]["items"] != null ? [cors_config.value["access_control_expose_headers"]] : []
         content {
           items = access_control_expose_headers.value["items"]
@@ -158,11 +158,11 @@ resource "aws_cloudfront_response_headers_policy" "default_behavior_response_hea
       )
     }
   }
-  
-  dynamic custom_headers_config {
-    for_each = length(each.value["custom_headers_config"]) > 0 ? tomap({"custom_headers_config" = each.value["custom_headers_config"]}) : {}
+
+  dynamic "custom_headers_config" {
+    for_each = length(each.value["custom_headers_config"]) > 0 ? tomap({ "custom_headers_config" = each.value["custom_headers_config"] }) : {}
     content {
-      dynamic items {
+      dynamic "items" {
         for_each = custom_headers_config.value
         content {
           header   = items.value["header"]
@@ -172,8 +172,8 @@ resource "aws_cloudfront_response_headers_policy" "default_behavior_response_hea
       }
     }
   }
- 
-  dynamic security_headers_config {
+
+  dynamic "security_headers_config" {
     #for_each = coalesce(toset([each.value["security_headers_config"]]), [])
     for_each = length(
       compact(
@@ -191,34 +191,34 @@ resource "aws_cloudfront_response_headers_policy" "default_behavior_response_hea
       )
     ) > 0 ? each.value["security_headers_config"] : {}
     content {
-      dynamic content_security_policy {
+      dynamic "content_security_policy" {
         for_each = security_headers_config.value["content_security_policy"]["content_security_policy"] != null ? [security_headers_config.value["content_security_policy"]] : []
         content {
           content_security_policy = content_security_policy.value["content_security_policy"]
           override                = content_security_policy.value["override"]
         }
       }
-      dynamic content_type_options {
+      dynamic "content_type_options" {
         for_each = security_headers_config.value["content_type_options"]["override"] != null ? [security_headers_config.value["content_type_options"]] : []
         content {
           override = content_type_options.value["override"]
         }
       }
-      dynamic frame_options {
+      dynamic "frame_options" {
         for_each = security_headers_config.value["frame_options"]["frame_option"] != null ? [security_headers_config.value["frame_options"]] : []
         content {
           frame_option = frame_options.value["frame_option"]
           override     = frame_options.value["override"]
         }
       }
-      dynamic referrer_policy {
+      dynamic "referrer_policy" {
         for_each = security_headers_config.value["referrer_policy"]["referrer_policy"] != null ? [security_headers_config.value["referrer_policy"]] : []
         content {
           referrer_policy = referrer_policy.value["referrer_policy"]
           override        = referrer_policy.value["override"]
         }
       }
-      dynamic strict_transport_security {
+      dynamic "strict_transport_security" {
         for_each = security_headers_config.value["strict_transport_security"]["access_control_max_age_sec"] != null ? [security_headers_config.value["strict_transport_security"]] : []
         content {
           access_control_max_age_sec = strict_transport_security.value["access_control_max_age_sec"]
@@ -230,13 +230,13 @@ resource "aws_cloudfront_response_headers_policy" "default_behavior_response_hea
     }
   }
 
-  dynamic server_timing_headers_config {
+  dynamic "server_timing_headers_config" {
     for_each = length(compact(
-        [
-          each.value["server_timing_headers_config"]["enabled"],
-          each.value["server_timing_headers_config"]["sampling_rate"]
-        ]
-    )) > 0 ? tomap(
+      [
+        each.value["server_timing_headers_config"]["enabled"],
+        each.value["server_timing_headers_config"]["sampling_rate"]
+      ]
+      )) > 0 ? tomap(
       {
         "server_timing_headers_config" = each.value["server_timing_headers_config"]
       }
@@ -272,8 +272,8 @@ resource "aws_cloudfront_response_headers_policy" "ordered_behavior_response_hea
   for_each = zipmap(
     flatten(
       [
-        for x in local.cloudfront_distribution_config_normalized:
-        [for z in x["ordered_cache_behavior"]:
+        for x in local.cloudfront_distribution_config_normalized :
+        [for z in x["ordered_cache_behavior"] :
           merge(z, { "response_headers_policy_id" : sha1(format("%s-%s-%s", x["id"], z["path_pattern"], z["target_origin_id"])) }) if length(
             concat(
               compact(
@@ -296,29 +296,29 @@ resource "aws_cloudfront_response_headers_policy" "ordered_behavior_response_hea
                     coalesce(z["response_headers_policy"]["security_headers_config"]["content_type_options"]["override"], []),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["frame_options"]["frame_option"], []),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["referrer_policy"]["referrer_policy"], []),
-                    coalesce(z["response_headers_policy"]["security_headers_config"]["strict_transport_security"]["access_control_max_age_sec"], [],),
+                    coalesce(z["response_headers_policy"]["security_headers_config"]["strict_transport_security"]["access_control_max_age_sec"], [], ),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["strict_transport_security"]["override"], []),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["xss_protection"]["mode_block"], []),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["xss_protection"]["override"], []),
-                    coalesce(z["response_headers_policy"]["security_headers_config"]["xss_protection"]["protection"], []),                  
+                    coalesce(z["response_headers_policy"]["security_headers_config"]["xss_protection"]["protection"], []),
                   ]
                 )
-              ),              
+              ),
               compact(
                 [
                   z["response_headers_policy"]["server_timing_headers_config"]["enabled"],
                   z["response_headers_policy"]["server_timing_headers_config"]["sampling_rate"],
                 ]
               )
-            ),   
+            ),
           ) > 0
         ]
       ]
     )[*]["response_headers_policy_id"],
     flatten(
       [
-        for x in local.cloudfront_distribution_config_normalized:
-        [for z in x["ordered_cache_behavior"]:
+        for x in local.cloudfront_distribution_config_normalized :
+        [for z in x["ordered_cache_behavior"] :
           z["response_headers_policy"] if length(
             concat(
               compact(
@@ -341,21 +341,21 @@ resource "aws_cloudfront_response_headers_policy" "ordered_behavior_response_hea
                     coalesce(z["response_headers_policy"]["security_headers_config"]["content_type_options"]["override"], []),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["frame_options"]["frame_option"], []),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["referrer_policy"]["referrer_policy"], []),
-                    coalesce(z["response_headers_policy"]["security_headers_config"]["strict_transport_security"]["access_control_max_age_sec"], [],),
+                    coalesce(z["response_headers_policy"]["security_headers_config"]["strict_transport_security"]["access_control_max_age_sec"], [], ),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["strict_transport_security"]["override"], []),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["xss_protection"]["mode_block"], []),
                     coalesce(z["response_headers_policy"]["security_headers_config"]["xss_protection"]["override"], []),
-                    coalesce(z["response_headers_policy"]["security_headers_config"]["xss_protection"]["protection"], []),                  
+                    coalesce(z["response_headers_policy"]["security_headers_config"]["xss_protection"]["protection"], []),
                   ]
                 )
-              ),              
+              ),
               compact(
                 [
                   z["response_headers_policy"]["server_timing_headers_config"]["enabled"],
                   z["response_headers_policy"]["server_timing_headers_config"]["sampling_rate"],
                 ]
               )
-            ),   
+            ),
           ) > 0
         ]
       ]
@@ -365,7 +365,7 @@ resource "aws_cloudfront_response_headers_policy" "ordered_behavior_response_hea
   name    = each.key
   comment = each.value["comment"]
 
-  dynamic cors_config {
+  dynamic "cors_config" {
     for_each = length(
       concat(
         compact(
@@ -376,11 +376,11 @@ resource "aws_cloudfront_response_headers_policy" "ordered_behavior_response_hea
         ),
         compact(
           coalesce(each.value["cors_config"]["access_control_allow_origins"]["items"], [])
-        ),        
+        ),
       )
-    ) > 0 ? tomap({"cors_config" = each.value["cors_config"]}) : {}
+    ) > 0 ? tomap({ "cors_config" = each.value["cors_config"] }) : {}
     content {
-      
+
       access_control_allow_credentials = coalesce(
         cors_config.value["access_control_allow_credentials"],
         local.default_cloudfront_distribution_config["ordered_cache_behavior"]["response_headers_policy"]["cors_config"]["access_control_allow_credentials"]
@@ -401,7 +401,7 @@ resource "aws_cloudfront_response_headers_policy" "ordered_behavior_response_hea
         items = cors_config.value["access_control_allow_origins"]["items"]
       }
 
-      dynamic access_control_expose_headers {
+      dynamic "access_control_expose_headers" {
         for_each = cors_config.value["access_control_expose_headers"]["items"] != null ? [cors_config.value["access_control_expose_headers"]] : []
         content {
           items = access_control_expose_headers.value["items"]
@@ -419,11 +419,11 @@ resource "aws_cloudfront_response_headers_policy" "ordered_behavior_response_hea
       )
     }
   }
-  
-  dynamic custom_headers_config {
-    for_each = length(each.value["custom_headers_config"]) > 0 ? tomap({"custom_headers_config" = each.value["custom_headers_config"]}) : {}
+
+  dynamic "custom_headers_config" {
+    for_each = length(each.value["custom_headers_config"]) > 0 ? tomap({ "custom_headers_config" = each.value["custom_headers_config"] }) : {}
     content {
-      dynamic items {
+      dynamic "items" {
         for_each = custom_headers_config.value
         content {
           header   = items.value["header"]
@@ -433,8 +433,8 @@ resource "aws_cloudfront_response_headers_policy" "ordered_behavior_response_hea
       }
     }
   }
- 
-  dynamic security_headers_config {
+
+  dynamic "security_headers_config" {
     #for_each = coalesce(toset([each.value["security_headers_config"]]), [])
     for_each = length(
       compact(
@@ -452,34 +452,34 @@ resource "aws_cloudfront_response_headers_policy" "ordered_behavior_response_hea
       )
     ) > 0 ? each.value["security_headers_config"] : {}
     content {
-      dynamic content_security_policy {
+      dynamic "content_security_policy" {
         for_each = security_headers_config.value["content_security_policy"]["content_security_policy"] != null ? [security_headers_config.value["content_security_policy"]] : []
         content {
           content_security_policy = content_security_policy.value["content_security_policy"]
           override                = content_security_policy.value["override"]
         }
       }
-      dynamic content_type_options {
+      dynamic "content_type_options" {
         for_each = security_headers_config.value["content_type_options"]["override"] != null ? [security_headers_config.value["content_type_options"]] : []
         content {
           override = content_type_options.value["override"]
         }
       }
-      dynamic frame_options {
+      dynamic "frame_options" {
         for_each = security_headers_config.value["frame_options"]["frame_option"] != null ? [security_headers_config.value["frame_options"]] : []
         content {
           frame_option = frame_options.value["frame_option"]
           override     = frame_options.value["override"]
         }
       }
-      dynamic referrer_policy {
+      dynamic "referrer_policy" {
         for_each = security_headers_config.value["referrer_policy"]["referrer_policy"] != null ? [security_headers_config.value["referrer_policy"]] : []
         content {
           referrer_policy = referrer_policy.value["referrer_policy"]
           override        = referrer_policy.value["override"]
         }
       }
-      dynamic strict_transport_security {
+      dynamic "strict_transport_security" {
         for_each = security_headers_config.value["strict_transport_security"]["access_control_max_age_sec"] != null ? [security_headers_config.value["strict_transport_security"]] : []
         content {
           access_control_max_age_sec = strict_transport_security.value["access_control_max_age_sec"]
@@ -491,13 +491,13 @@ resource "aws_cloudfront_response_headers_policy" "ordered_behavior_response_hea
     }
   }
 
-  dynamic server_timing_headers_config {
+  dynamic "server_timing_headers_config" {
     for_each = length(compact(
-        [
-          each.value["server_timing_headers_config"]["enabled"],
-          each.value["server_timing_headers_config"]["sampling_rate"]
-        ]
-    )) > 0 ? tomap(
+      [
+        each.value["server_timing_headers_config"]["enabled"],
+        each.value["server_timing_headers_config"]["sampling_rate"]
+      ]
+      )) > 0 ? tomap(
       {
         "server_timing_headers_config" = each.value["server_timing_headers_config"]
       }
@@ -510,7 +510,7 @@ resource "aws_cloudfront_response_headers_policy" "ordered_behavior_response_hea
       sampling_rate = coalesce(
         server_timing_headers_config.value["sampling_rate"],
         local.default_cloudfront_distribution_config["ordered_cache_behavior"]["response_headers_policy"]["server_timing_headers_config"]["sampling_rate"]
-      ) 
+      )
     }
   }
 

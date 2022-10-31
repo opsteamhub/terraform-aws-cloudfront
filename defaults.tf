@@ -43,7 +43,7 @@ locals {
       }
       max_ttl = 31536000
       min_ttl = 0
-      
+
       origin_request_policy = {
         cookies_config = {
           cookie_behavior = "all"
@@ -61,8 +61,8 @@ locals {
           access_control_allow_methods = {
             items = ["GET"]
           }
-          access_control_max_age_sec    = "3600"
-          origin_override               = true
+          access_control_max_age_sec = "3600"
+          origin_override            = true
         }
         server_timing_headers_config = {
           enabled       = true
@@ -129,8 +129,8 @@ locals {
           access_control_allow_methods = {
             items = ["GET"]
           }
-          access_control_max_age_sec    = "3600"
-          origin_override               = true
+          access_control_max_age_sec = "3600"
+          origin_override            = true
         }
         server_timing_headers_config = {
           enabled       = true
@@ -176,7 +176,7 @@ locals {
   # Generate list of objects adding default values to each attribute.
   #
   #
-  cloudfront_distribution_config = [ for x in local.cloudfront_distribution_config_normalized :
+  cloudfront_distribution_config = [for x in local.cloudfront_distribution_config_normalized :
     {
       id = x["id"]
 
@@ -200,17 +200,17 @@ locals {
           comment     = x["default_cache_behavior"]["cache_policy"]["comment"]
           default_ttl = coalesce(x["default_cache_behavior"]["cache_policy"]["default_ttl"], local.default_cloudfront_distribution_config["default_cache_behavior"]["cache_policy"]["default_ttl"])
           id = try(
-                    aws_cloudfront_cache_policy.default_behavior_cache_policy[
-                      sha1(
-                        format(
-                          "%s-default-%s",
-                          x["id"],
-                          x["default_cache_behavior"]["target_origin_id"]
-                        )
-                      )
-                    ].id,
-                    x["default_cache_behavior"]["cache_policy"]["id"]
-                  )
+            aws_cloudfront_cache_policy.default_behavior_cache_policy[
+              sha1(
+                format(
+                  "%s-default-%s",
+                  x["id"],
+                  x["default_cache_behavior"]["target_origin_id"]
+                )
+              )
+            ].id,
+            x["default_cache_behavior"]["cache_policy"]["id"]
+          )
           max_ttl = coalesce(x["default_cache_behavior"]["cache_policy"]["max_ttl"], local.default_cloudfront_distribution_config["default_cache_behavior"]["cache_policy"]["max_ttl"])
           min_ttl = coalesce(x["default_cache_behavior"]["cache_policy"]["min_ttl"], local.default_cloudfront_distribution_config["default_cache_behavior"]["cache_policy"]["min_ttl"])
           parameters_in_cache_key_and_forwarded_to_origin = {
@@ -246,18 +246,18 @@ locals {
         compress = coalesce(x["default_cache_behavior"]["compress"], local.default_cloudfront_distribution_config["default_cache_behavior"]["compress"])
 
         default_ttl = try(
-                            aws_cloudfront_cache_policy.default_behavior_cache_policy[
-                              sha1(
-                                format(
-                                  "%s-default-%s", x["id"], x["default_cache_behavior"]["target_origin_id"]
-                                )
-                              )
-                            ].id,
-                            x["default_cache_behavior"]["cache_policy"]["id"]
-                          ) == null ? coalesce(
-                            x["default_cache_behavior"]["default_ttl"],
-                            local.default_cloudfront_distribution_config["default_cache_behavior"]["default_ttl"]
-                          ) : null
+          aws_cloudfront_cache_policy.default_behavior_cache_policy[
+            sha1(
+              format(
+                "%s-default-%s", x["id"], x["default_cache_behavior"]["target_origin_id"]
+              )
+            )
+          ].id,
+          x["default_cache_behavior"]["cache_policy"]["id"]
+          ) == null ? coalesce(
+          x["default_cache_behavior"]["default_ttl"],
+          local.default_cloudfront_distribution_config["default_cache_behavior"]["default_ttl"]
+        ) : null
 
         field_level_encryption_id = x["default_cache_behavior"]["field_level_encryption_id"]
 
@@ -271,7 +271,7 @@ locals {
               "s3.amazonaws.com",
               zipmap(x["origin"][*]["origin_id"], x["origin"][*]["domain_name"])[x["default_cache_behavior"]["target_origin_id"]]
             ),
-            "s3.amazonaws.com") ? null : x["default_cache_behavior"]["forwarded_values"]["headers"]
+          "s3.amazonaws.com") ? null : x["default_cache_behavior"]["forwarded_values"]["headers"]
           query_string            = coalesce(x["default_cache_behavior"]["forwarded_values"]["query_string"], local.default_cloudfront_distribution_config["default_cache_behavior"]["forwarded_values"]["query_string"])
           query_string_cache_keys = x["default_cache_behavior"]["forwarded_values"]["query_string_cache_keys"]
         } : null
@@ -292,32 +292,32 @@ locals {
         ]
 
         max_ttl = try(
-                        aws_cloudfront_cache_policy.default_behavior_cache_policy[
-                          sha1(
-                            format(
-                              "%s-default-%s", x["id"], x["default_cache_behavior"]["target_origin_id"]
-                            )
-                          )
-                        ].id,
-                        x["default_cache_behavior"]["cache_policy"]["id"]
-                      ) == null ? coalesce(
-                        x["default_cache_behavior"]["max_ttl"],
-                        local.default_cloudfront_distribution_config["default_cache_behavior"]["max_ttl"]
-                      ) : null
+          aws_cloudfront_cache_policy.default_behavior_cache_policy[
+            sha1(
+              format(
+                "%s-default-%s", x["id"], x["default_cache_behavior"]["target_origin_id"]
+              )
+            )
+          ].id,
+          x["default_cache_behavior"]["cache_policy"]["id"]
+          ) == null ? coalesce(
+          x["default_cache_behavior"]["max_ttl"],
+          local.default_cloudfront_distribution_config["default_cache_behavior"]["max_ttl"]
+        ) : null
 
         min_ttl = try(
-                        aws_cloudfront_cache_policy.default_behavior_cache_policy[
-                          sha1(  
-                            format(
-                              "%s-default-%s", x["id"], x["default_cache_behavior"]["target_origin_id"]
-                            )
-                          )
-                        ].id,
-                        x["default_cache_behavior"]["cache_policy"]["id"]
-                      ) == null ? coalesce(
-                        x["default_cache_behavior"]["min_ttl"],
-                        local.default_cloudfront_distribution_config["default_cache_behavior"]["min_ttl"]
-                      ) : null
+          aws_cloudfront_cache_policy.default_behavior_cache_policy[
+            sha1(
+              format(
+                "%s-default-%s", x["id"], x["default_cache_behavior"]["target_origin_id"]
+              )
+            )
+          ].id,
+          x["default_cache_behavior"]["cache_policy"]["id"]
+          ) == null ? coalesce(
+          x["default_cache_behavior"]["min_ttl"],
+          local.default_cloudfront_distribution_config["default_cache_behavior"]["min_ttl"]
+        ) : null
 
 
         origin_request_policy = {
@@ -399,7 +399,7 @@ locals {
               null
             )
           }
-          custom_headers_config = [ for z in coalesce(try(x["default_cache_behavior"]["response_headers_policy"]["custom_headers_config"], null), []):
+          custom_headers_config = [for z in coalesce(try(x["default_cache_behavior"]["response_headers_policy"]["custom_headers_config"], null), []) :
             {
               header = try(
                 z["header"],
@@ -432,7 +432,7 @@ locals {
               content_security_policy = try(
                 x["default_cache_behavior"]["response_headers_policy"]["security_headers_config"]["content_security_policy"]["content_security_policy"],
                 null
-              ) 
+              )
               override = try(
                 x["default_cache_behavior"]["response_headers_policy"]["security_headers_config"]["content_security_policy"]["override"],
                 null
@@ -459,7 +459,7 @@ locals {
                 x["default_cache_behavior"]["response_headers_policy"]["referrer_policy"]["referrer_policy"],
                 null
               )
-              override        = try(
+              override = try(
                 x["default_cache_behavior"]["response_headers_policy"]["referrer_policy"]["override"],
                 null
               )
@@ -469,15 +469,15 @@ locals {
                 x["default_cache_behavior"]["response_headers_policy"]["strict_transport_security"]["access_control_max_age_sec"],
                 null
               )
-              include_subdomains         = try(
+              include_subdomains = try(
                 x["default_cache_behavior"]["response_headers_policy"]["strict_transport_security"]["include_subdomains"],
                 null
               )
-              override                   = try(
+              override = try(
                 x["default_cache_behavior"]["response_headers_policy"]["strict_transport_security"]["override"],
                 null
               )
-              preload                    = try(
+              preload = try(
                 x["default_cache_behavior"]["response_headers_policy"]["strict_transport_security"]["preload"],
                 null
               )
@@ -487,7 +487,7 @@ locals {
                 x["default_cache_behavior"]["response_headers_policy"]["xss_protection"]["mode_block"],
                 null
               )
-              override   = try(
+              override = try(
                 x["default_cache_behavior"]["response_headers_policy"]["xss_protection"]["override"],
                 null
               )
@@ -539,24 +539,24 @@ locals {
             name        = try(z["cache_policy"]["name"], null)
             comment     = try(z["cache_policy"]["comment"], null)
             default_ttl = try(z["cache_policy"]["default_ttl"], null)
-            
-            id          = try(
-                                aws_cloudfront_cache_policy.ordered_behavior_cache_policy[
-                                  sha1(
-                                    format(
-                                      "%s-%s-%s",
-                                      x["id"],
-                                      z["path_pattern"],
-                                      z["target_origin_id"]
-                                    )
-                                  )
-                                ].id,
-                                z["cache_policy"]["id"]
-                              )
 
-            max_ttl     = try(z["cache_policy"]["max_ttl"], null)
-            min_ttl     = try(z["cache_policy"]["min_ttl"], null)
-            
+            id = try(
+              aws_cloudfront_cache_policy.ordered_behavior_cache_policy[
+                sha1(
+                  format(
+                    "%s-%s-%s",
+                    x["id"],
+                    z["path_pattern"],
+                    z["target_origin_id"]
+                  )
+                )
+              ].id,
+              z["cache_policy"]["id"]
+            )
+
+            max_ttl = try(z["cache_policy"]["max_ttl"], null)
+            min_ttl = try(z["cache_policy"]["min_ttl"], null)
+
             parameters_in_cache_key_and_forwarded_to_origin = {
               cookies_config = {
                 cookie_behavior = coalesce(
@@ -587,39 +587,39 @@ locals {
               }
             }
           }
-          
+
           compress = coalesce(z["compress"], local.default_cloudfront_distribution_config["ordered_cache_behavior"]["compress"])
 
           default_ttl = try(
-                              aws_cloudfront_cache_policy.ordered_behavior_cache_policy[
-                                sha1(
-                                  format(
-                                    "%s-%s-%s", x["id"], z["path_pattern"], z["target_origin_id"]
-                                  )
-                                )
-                              ].id,
-                              z["cache_policy"]["id"]
-                            ) == null ? coalesce(
-                              z["default_ttl"],
-                              local.default_cloudfront_distribution_config["ordered_cache_behavior"]["default_ttl"]
-                            ) : null
+            aws_cloudfront_cache_policy.ordered_behavior_cache_policy[
+              sha1(
+                format(
+                  "%s-%s-%s", x["id"], z["path_pattern"], z["target_origin_id"]
+                )
+              )
+            ].id,
+            z["cache_policy"]["id"]
+            ) == null ? coalesce(
+            z["default_ttl"],
+            local.default_cloudfront_distribution_config["ordered_cache_behavior"]["default_ttl"]
+          ) : null
 
           field_level_encryption_id = z["field_level_encryption_id"]
-          
+
           forwarded_values = z["cache_policy"]["id"] == null ? {
             cookies                 = coalesce(z["forwarded_values"]["cookies"], local.default_cloudfront_distribution_config["ordered_cache_behavior"]["forwarded_values"]["cookies"])
             headers                 = contains(regexall("s3.amazonaws.com", zipmap(x["origin"][*]["origin_id"], x["origin"][*]["domain_name"])[z["target_origin_id"]]), "s3.amazonaws.com") ? coalesce(z["forwarded_values"]["headers"], local.default_cloudfront_distribution_config["ordered_cache_behavior"]["forwarded_values"]["headers_for_s3"]) : coalesce(z["forwarded_values"]["headers"], local.default_cloudfront_distribution_config["ordered_cache_behavior"]["forwarded_values"]["headers"])
             query_string            = coalesce(z["forwarded_values"]["query_string"], local.default_cloudfront_distribution_config["ordered_cache_behavior"]["forwarded_values"]["query_string"])
             query_string_cache_keys = z["forwarded_values"]["query_string_cache_keys"]
           } : null
-          
+
           function_association = [for y in coalesce(z["function_association"], []) :
             {
               event_type   = try(y["event_type"], null)
               function_arn = try(y["function_arn"], null)
             }
           ]
-          
+
           lambda_function_association = [for y in coalesce(z["lambda_function_association"], []) :
             {
               event_type   = try(y["event_type"], null)
@@ -627,49 +627,49 @@ locals {
               include_body = try(y["include_body"], null)
             }
           ]
-          
+
           max_ttl = try(
-                              aws_cloudfront_cache_policy.ordered_behavior_cache_policy[
-                                sha1(
-                                  format(
-                                    "%s-%s-%s", x["id"], z["path_pattern"], z["target_origin_id"]
-                                  )
-                                )
-                              ].id,
-                              z["cache_policy"]["id"]
-                            ) == null ? coalesce(
-                              z["max_ttl"],
-                              local.default_cloudfront_distribution_config["ordered_cache_behavior"]["max_ttl"]
-                            ) : null
-          
+            aws_cloudfront_cache_policy.ordered_behavior_cache_policy[
+              sha1(
+                format(
+                  "%s-%s-%s", x["id"], z["path_pattern"], z["target_origin_id"]
+                )
+              )
+            ].id,
+            z["cache_policy"]["id"]
+            ) == null ? coalesce(
+            z["max_ttl"],
+            local.default_cloudfront_distribution_config["ordered_cache_behavior"]["max_ttl"]
+          ) : null
+
           min_ttl = try(
-                              aws_cloudfront_cache_policy.ordered_behavior_cache_policy[
-                                sha1(
-                                  format(
-                                    "%s-%s-%s", x["id"], z["path_pattern"], z["target_origin_id"]
-                                  )
-                                )
-                              ].id,
-                              z["cache_policy"]["id"]
-                            ) == null ? coalesce(
-                              z["min_ttl"],
-                              local.default_cloudfront_distribution_config["ordered_cache_behavior"]["min_ttl"]
-                            ) : null
+            aws_cloudfront_cache_policy.ordered_behavior_cache_policy[
+              sha1(
+                format(
+                  "%s-%s-%s", x["id"], z["path_pattern"], z["target_origin_id"]
+                )
+              )
+            ].id,
+            z["cache_policy"]["id"]
+            ) == null ? coalesce(
+            z["min_ttl"],
+            local.default_cloudfront_distribution_config["ordered_cache_behavior"]["min_ttl"]
+          ) : null
 
           origin_request_policy = {
             id = try(
-                      aws_cloudfront_origin_request_policy.ordered_behavior_origin_request_policy[
-                        sha1(
-                          format(
-                            "%s-%s-%s",
-                            x["id"],
-                            z["path_pattern"],
-                            z["target_origin_id"]
-                          )
-                        )
-                      ].id,
-                      z["origin_request_policy"]["id"]
-                    )
+              aws_cloudfront_origin_request_policy.ordered_behavior_origin_request_policy[
+                sha1(
+                  format(
+                    "%s-%s-%s",
+                    x["id"],
+                    z["path_pattern"],
+                    z["target_origin_id"]
+                  )
+                )
+              ].id,
+              z["origin_request_policy"]["id"]
+            )
 
             comment = try(
               z["origin_request_policy"]["comment"],
@@ -690,9 +690,9 @@ locals {
             }
             headers_config = {
               header_behavior = try(
-                  z["origin_request_policy"]["cookies_config"]["cookie_behavior"],
-                  null
-                )
+                z["origin_request_policy"]["cookies_config"]["cookie_behavior"],
+                null
+              )
               headers = {
                 items = try(
                   z["origin_request_policy"]["headers_config"]["headers"]["items"],
@@ -752,7 +752,7 @@ locals {
                 null
               )
             }
-            custom_headers_config = [ for z in coalesce(try(z["response_headers_policy"]["custom_headers_config"], null), []):
+            custom_headers_config = [for z in coalesce(try(z["response_headers_policy"]["custom_headers_config"], null), []) :
               {
                 header = try(
                   z["header"],
@@ -786,7 +786,7 @@ locals {
                 content_security_policy = try(
                   z["response_headers_policy"]["security_headers_config"]["content_security_policy"]["content_security_policy"],
                   null
-                ) 
+                )
                 override = try(
                   z["response_headers_policy"]["security_headers_config"]["content_security_policy"]["override"],
                   null
@@ -813,7 +813,7 @@ locals {
                   z["response_headers_policy"]["referrer_policy"]["referrer_policy"],
                   null
                 )
-                override        = try(
+                override = try(
                   z["response_headers_policy"]["referrer_policy"]["override"],
                   null
                 )
@@ -823,15 +823,15 @@ locals {
                   z["response_headers_policy"]["strict_transport_security"]["access_control_max_age_sec"],
                   null
                 )
-                include_subdomains         = try(
+                include_subdomains = try(
                   z["response_headers_policy"]["strict_transport_security"]["include_subdomains"],
                   null
                 )
-                override                   = try(
+                override = try(
                   z["response_headers_policy"]["strict_transport_security"]["override"],
                   null
                 )
-                preload                    = try(
+                preload = try(
                   z["response_headers_policy"]["strict_transport_security"]["preload"],
                   null
                 )
@@ -841,7 +841,7 @@ locals {
                   z["response_headers_policy"]["xss_protection"]["mode_block"],
                   null
                 )
-                override   = try(
+                override = try(
                   z["response_headers_policy"]["xss_protection"]["override"],
                   null
                 )
@@ -865,7 +865,7 @@ locals {
                 null
               )
             }
-          }          
+          }
           smooth_streaming = coalesce(z["smooth_streaming"], local.default_cloudfront_distribution_config["ordered_cache_behavior"]["smooth_streaming"])
           target_origin_id = z["target_origin_id"]
           #trusted_key_groups             = 

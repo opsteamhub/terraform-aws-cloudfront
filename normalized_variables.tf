@@ -147,7 +147,7 @@ locals {
               null
             )
           }
-          custom_headers_config = [ for z in coalesce(try(x["default_cache_behavior"]["response_headers_policy"]["custom_headers_config"], null), []):
+          custom_headers_config = [for z in coalesce(try(x["default_cache_behavior"]["response_headers_policy"]["custom_headers_config"], null), []) :
             {
               header = try(
                 z["header"],
@@ -172,7 +172,7 @@ locals {
               content_security_policy = try(
                 x["default_cache_behavior"]["response_headers_policy"]["security_headers_config"]["content_security_policy"]["content_security_policy"],
                 null
-              ) 
+              )
               override = try(
                 x["default_cache_behavior"]["response_headers_policy"]["security_headers_config"]["content_security_policy"]["override"],
                 null
@@ -199,7 +199,7 @@ locals {
                 x["default_cache_behavior"]["response_headers_policy"]["referrer_policy"]["referrer_policy"],
                 null
               )
-              override        = try(
+              override = try(
                 x["default_cache_behavior"]["response_headers_policy"]["referrer_policy"]["override"],
                 null
               )
@@ -209,15 +209,15 @@ locals {
                 x["default_cache_behavior"]["response_headers_policy"]["strict_transport_security"]["access_control_max_age_sec"],
                 null
               )
-              include_subdomains         = try(
+              include_subdomains = try(
                 x["default_cache_behavior"]["response_headers_policy"]["strict_transport_security"]["include_subdomains"],
                 null
               )
-              override                   = try(
+              override = try(
                 x["default_cache_behavior"]["response_headers_policy"]["strict_transport_security"]["override"],
                 null
               )
-              preload                    = try(
+              preload = try(
                 x["default_cache_behavior"]["response_headers_policy"]["strict_transport_security"]["preload"],
                 null
               )
@@ -227,7 +227,7 @@ locals {
                 x["default_cache_behavior"]["response_headers_policy"]["xss_protection"]["mode_block"],
                 null
               )
-              override   = try(
+              override = try(
                 x["default_cache_behavior"]["response_headers_policy"]["xss_protection"]["override"],
                 null
               )
@@ -386,7 +386,7 @@ locals {
                 null
               )
             }
-            custom_headers_config = [ for w in coalesce(try(z["response_headers_policy"]["custom_headers_config"], null), []):
+            custom_headers_config = [for w in coalesce(try(z["response_headers_policy"]["custom_headers_config"], null), []) :
               {
                 header = try(
                   w["header"],
@@ -411,7 +411,7 @@ locals {
                 content_security_policy = try(
                   z["response_headers_policy"]["security_headers_config"]["content_security_policy"]["content_security_policy"],
                   null
-                ) 
+                )
                 override = try(
                   z["response_headers_policy"]["security_headers_config"]["content_security_policy"]["override"],
                   null
@@ -438,7 +438,7 @@ locals {
                   z["response_headers_policy"]["referrer_policy"]["referrer_policy"],
                   null
                 )
-                override        = try(
+                override = try(
                   z["response_headers_policy"]["referrer_policy"]["override"],
                   null
                 )
@@ -448,15 +448,15 @@ locals {
                   z["response_headers_policy"]["strict_transport_security"]["access_control_max_age_sec"],
                   null
                 )
-                include_subdomains         = try(
+                include_subdomains = try(
                   z["response_headers_policy"]["strict_transport_security"]["include_subdomains"],
                   null
                 )
-                override                   = try(
+                override = try(
                   z["response_headers_policy"]["strict_transport_security"]["override"],
                   null
                 )
-                preload                    = try(
+                preload = try(
                   z["response_headers_policy"]["strict_transport_security"]["preload"],
                   null
                 )
@@ -466,7 +466,7 @@ locals {
                   z["response_headers_policy"]["xss_protection"]["mode_block"],
                   null
                 )
-                override   = try(
+                override = try(
                   z["response_headers_policy"]["xss_protection"]["override"],
                   null
                 )
@@ -490,7 +490,7 @@ locals {
                 null
               )
             }
-          }          
+          }
           smooth_streaming = try(z["smooth_streaming"], null)
           target_origin_id = z["target_origin_id"]
           #trusted_key_groups             = 

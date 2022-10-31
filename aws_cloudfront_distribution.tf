@@ -32,15 +32,15 @@ resource "aws_cloudfront_distribution" "distribution" {
         }
       }
 
-      max_ttl                  = default_cache_behavior.value["max_ttl"]
-      min_ttl                  = default_cache_behavior.value["min_ttl"]
-      origin_request_policy_id = default_cache_behavior.value["origin_request_policy"]["id"]
+      max_ttl                    = default_cache_behavior.value["max_ttl"]
+      min_ttl                    = default_cache_behavior.value["min_ttl"]
+      origin_request_policy_id   = default_cache_behavior.value["origin_request_policy"]["id"]
       response_headers_policy_id = default_cache_behavior.value["response_headers_policy"]["id"]
-      smooth_streaming         = default_cache_behavior.value["smooth_streaming"]
-      target_origin_id         = default_cache_behavior.value["target_origin_id"]
-      trusted_key_groups       = []
-      trusted_signers          = []
-      viewer_protocol_policy   = default_cache_behavior.value["viewer_protocol_policy"]
+      smooth_streaming           = default_cache_behavior.value["smooth_streaming"]
+      target_origin_id           = default_cache_behavior.value["target_origin_id"]
+      trusted_key_groups         = []
+      trusted_signers            = []
+      viewer_protocol_policy     = default_cache_behavior.value["viewer_protocol_policy"]
     }
   }
 
@@ -79,15 +79,15 @@ resource "aws_cloudfront_distribution" "distribution" {
         }
       }
 
-      max_ttl                  = ordered_cache_behavior.value["max_ttl"]
-      min_ttl                  = ordered_cache_behavior.value["min_ttl"]
-      origin_request_policy_id = ordered_cache_behavior.value["origin_request_policy"]["id"]
-      path_pattern             = ordered_cache_behavior.value["path_pattern"]
+      max_ttl                    = ordered_cache_behavior.value["max_ttl"]
+      min_ttl                    = ordered_cache_behavior.value["min_ttl"]
+      origin_request_policy_id   = ordered_cache_behavior.value["origin_request_policy"]["id"]
+      path_pattern               = ordered_cache_behavior.value["path_pattern"]
       response_headers_policy_id = ordered_cache_behavior.value["response_headers_policy"]["id"]
-      target_origin_id         = ordered_cache_behavior.value["target_origin_id"]
-      trusted_key_groups       = []
-      trusted_signers          = []
-      viewer_protocol_policy   = ordered_cache_behavior.value["viewer_protocol_policy"]
+      target_origin_id           = ordered_cache_behavior.value["target_origin_id"]
+      trusted_key_groups         = []
+      trusted_signers            = []
+      viewer_protocol_policy     = ordered_cache_behavior.value["viewer_protocol_policy"]
     }
   }
 
@@ -116,11 +116,11 @@ resource "aws_cloudfront_distribution" "distribution" {
         }
       }
 
-      connection_timeout = origin.value["connection_timeout"]
-      domain_name        = origin.value["domain_name"]
-      origin_access_control_id         = origin.value["origin_access_control_id"]
-      origin_id   = origin.value["origin_id"]
-      origin_path = origin.value["origin_path"]
+      connection_timeout       = origin.value["connection_timeout"]
+      domain_name              = origin.value["domain_name"]
+      origin_access_control_id = origin.value["origin_access_control_id"]
+      origin_id                = origin.value["origin_id"]
+      origin_path              = origin.value["origin_path"]
 
       dynamic "origin_shield" {
         for_each = origin.value["origin_shield"]["origin_shield_region"] != null ? tomap({ "origin_shield" = origin.value["origin_shield"] }) : {}

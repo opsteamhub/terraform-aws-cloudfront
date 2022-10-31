@@ -1,5 +1,5 @@
 module "opsteam-testecase-01-cloudfront-s3origin" {
-  source = "/Users/brunopaiuca/projects/opsteam/terraform-modules/terraform-aws-cloudfront"
+  source = "../.././"
   cloudfront_distribution_config = [
     {
       id      = "Wja7S2MxWI-cdn-s3-origin"
@@ -9,8 +9,8 @@ module "opsteam-testecase-01-cloudfront-s3origin" {
       }
       origin = [
         {
-          domain_name              = "opsteam-testecase-001-bucketpolicy.s3.amazonaws.com"
-          origin_id                = "pQYucvOKtL"
+          domain_name = "opsteam-testecase-001-bucketpolicy.s3.amazonaws.com"
+          origin_id   = "pQYucvOKtL"
         },
       ]
     },
@@ -22,8 +22,8 @@ module "opsteam-testecase-01-cloudfront-s3origin" {
       }
       origin = [
         {
-          domain_name              = "opsteam-testecase-001-bucketpolicy.s3.amazonaws.com"
-          origin_id                = "AGITaM4EOI"
+          domain_name = "opsteam-testecase-001-bucketpolicy.s3.amazonaws.com"
+          origin_id   = "AGITaM4EOI"
         },
       ]
     }
